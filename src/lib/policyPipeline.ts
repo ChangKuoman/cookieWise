@@ -89,6 +89,7 @@ async function summarize(
     if (!res.ok) throw new Error(`Proxy error ${res.status}: ${await res.text()}`);
     return res.json();
   }
+  if (settings.mode !== 'direct') throw new SetupRequiredError('Choose an AI provider in CookieWise settings.');
   const client = new Anthropic({ apiKey: settings.apiKey, dangerouslyAllowBrowser: true });
   try {
     return await summarizeWithClaude(client, request, { model: settings.model, effort: settings.effort });
