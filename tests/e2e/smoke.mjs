@@ -99,6 +99,21 @@ try {
   names = (await context.cookies(ORIGIN)).map((c) => c.name);
   assert(names.includes('_fbp'), 'undo restores the deleted cookie');
 
+  step('A hung AI call shows progress and can be restarted');
+  server.hangSummarize = true;
+  await popup.getByRole('tab', { name: /giving away/ }).click();
+  await popup.getByRole('button', { name: 'Re-analyze' }).click();
+  await popup.getByText(/Asking the CookieWise server to read 1 document/).waitFor({ timeout: 15000 });
+  assert(true, 'loading shows the current step');
+  await popup.getByRole('button', { name: /Start over/ }).waitFor({ timeout: 40000 });
+  assert(true, '"Start over" offered after 25s');
+  await popup.screenshot({ path: path.join(SHOTS, '6b-popup-slow.png') });
+  server.hangSummarize = false;
+  await popup.getByRole('button', { name: /Start over/ }).click();
+  await popup.getByText(/sells your browsing data/).waitFor({ timeout: 20000 });
+  await popup.waitForTimeout(1000);
+  assert((await popup.getByText('Restarted.').count()) === 0, 'restart recovers and the cancelled run is ignored');
+
   step('Dashboard lists the site with tier counts');
   const dash = await context.newPage();
   await dash.goto(`chrome-extension://${extId}/options.html`);
