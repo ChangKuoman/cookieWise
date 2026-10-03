@@ -18,6 +18,7 @@ export async function summarizeWithClaude(
   client: Anthropic,
   req: SummarizeRequest,
   opts: SummarizeOptions,
+  signal?: AbortSignal,
 ): Promise<SummarizeResult> {
   const { body, truncated } = prepareDocuments(req.documents);
   const response = await client.beta.messages.parse({
@@ -28,7 +29,7 @@ export async function summarizeWithClaude(
     system: SYSTEM_PROMPT,
     output_config: { effort: opts.effort, format: betaZodOutputFormat(PolicySummarySchema) },
     messages: [{ role: 'user', content: userPrompt(req, body, truncated) }],
-  });
+  }, { signal });
 
   if (response.stop_reason === 'refusal') {
     throw new Error('The AI declined to analyze this policy.');

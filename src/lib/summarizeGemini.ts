@@ -26,6 +26,7 @@ export async function summarizeWithGemini(
   apiKey: string,
   req: SummarizeRequest,
   opts: SummarizeOptions,
+  signal?: AbortSignal,
 ): Promise<SummarizeResult> {
   const ai = new GoogleGenAI({ apiKey });
   const { body, truncated } = prepareDocuments(req.documents);
@@ -41,6 +42,7 @@ export async function summarizeWithGemini(
         responseJsonSchema: RESPONSE_SCHEMA,
         maxOutputTokens: 16000,
         thinkingConfig: { thinkingLevel: THINKING[opts.effort] },
+        abortSignal: signal,
       },
     });
   } catch (e) {

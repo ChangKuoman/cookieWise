@@ -76,6 +76,7 @@ export function startFixtureServer() {
       req.on('data', (c) => (body += c));
       req.on('end', () => {
         server.lastSummarizeRequest = JSON.parse(body);
+        if (server.hangSummarize) return; // simulate an AI call that never answers
         res.writeHead(200, { 'content-type': 'application/json' });
         res.end(JSON.stringify({ summary: SUMMARY, truncated: false, model: 'fixture' }));
       });
