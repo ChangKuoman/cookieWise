@@ -1,0 +1,12 @@
+name = "cookiewise-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Shared summary cache: one summary per policy version, reused by every user.
+# Create with: npx wrangler kv namespace create CACHE   then paste the id below.
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "<your-kv-namespace-id>"
+
+# Secret (never commit): npx wrangler secret put ANTHROPIC_API_KEY

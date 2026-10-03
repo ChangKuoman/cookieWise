@@ -1,0 +1,8 @@
+node_modules
+.output
+.wxt
+dist
+.env
+proxy/node_modules
+proxy/.wrangler
+tests/e2e/screenshots
